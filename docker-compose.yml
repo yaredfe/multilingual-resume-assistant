@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  resume-screener:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount data directories for persistence
+      - ./data:/app/data
+      # Mount models directory (optional - for faster startup)
+      - ./models:/app/models
+      # Mount static files
+      - ./static:/app/static
+    environment:
+      - CHROMA_DB_PATH=/app/data/chroma_db
+      - HOST=0.0.0.0
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G 

@@ -1,0 +1,33 @@
+# Core web framework
+fastapi
+uvicorn
+python-multipart
+
+# ML and AI libraries
+transformers
+sentence-transformers
+spacy
+torch
+torchvision
+torchaudio
+sentencepiece
+# Database and vector store
+chromadb
+duckdb
+
+# PDF processing
+PyPDF2
+
+# Utilities
+python-dotenv
+requests
+numpy
+pandas
+scikit-learn
+langdetect
+tqdm
+sentencepiece
+
+# spaCy model (will be downloaded separately)
+# en_core_web_sm 
+dateparser 
