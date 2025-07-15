@@ -232,7 +232,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - **Author**: Yared Fereja
 - **Email**: yared.fereja@example.com
 - **LinkedIn**: [Yared Fereja](https://www.linkedin.com/in/yared-fereja-067872326/)
-- **GitHub**: [@yourusername](https://github.com/yourusername)
+- **GitHub**: [@yaredfe](https://github.com/yaredfe)
 
 ## 🗺️ Roadmap
 
