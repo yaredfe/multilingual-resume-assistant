@@ -230,7 +230,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ## 📞 Support & Contact
 
 - **Author**: Yared Fereja
-- **Email**: yared.fereja@example.com
+- **Email**: yaredfereja864@gmail.com
 - **LinkedIn**: [Yared Fereja](https://www.linkedin.com/in/yared-fereja-067872326/)
 - **GitHub**: [@yaredfe](https://github.com/yaredfe)
 
