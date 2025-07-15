@@ -1,0 +1,47 @@
+# Use a minimal Python image
+FROM python:3.11-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install minimal system dependencies
+RUN apk add --no-cache \
+    build-base \
+    curl \
+    git
+
+# Set pip configuration
+ENV PIP_TIMEOUT=600
+ENV PIP_RETRIES=5
+
+# Copy requirements
+COPY requirements-docker.txt .
+
+# Install Python packages in stages
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Install core packages first
+RUN pip install --no-cache-dir fastapi uvicorn python-multipart
+
+# Install ML packages
+RUN pip install --no-cache-dir numpy pandas scikit-learn
+RUN pip install --no-cache-dir transformers sentence-transformers
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining packages
+RUN pip install --no-cache-dir spacy chromadb duckdb PyPDF2 python-dotenv requests
+
+# Copy application
+COPY . .
+
+# Create directories
+RUN mkdir -p static data/resumes data/parsed data/chroma_db
+
+# Download spaCy model
+RUN python -m spacy download en_core_web_sm
+
+# Expose port
+EXPOSE 8000
+
+# Run application
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"] 
