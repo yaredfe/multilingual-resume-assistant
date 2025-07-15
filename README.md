@@ -263,3 +263,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 **⭐ Star this repository if you find it useful!**
 
 *Built with ❤️ and ☕ by Yared Fereja*
+
+## ⚠️ Known Issues
+
+- The interview question generation feature is currently under development and not functional. I am actively working to resolve this. All other features are available for use and testing.
