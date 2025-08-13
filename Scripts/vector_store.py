@@ -6,14 +6,64 @@ from sentence_transformers import SentenceTransformer
 
 MODEL_PATH = "models/sentence-transformers/all-MiniLM-L6-v2"
 
-embedding_model = SentenceTransformer(MODEL_PATH)
-embedding_function = SentenceTransformerEmbeddingFunction(model_name=MODEL_PATH)
+# Global variables for lazy loading
+_embedding_model = None
+_embedding_function = None
+
+def get_embedding_model():
+    """Lazy load the embedding model with proper cache directory"""
+    global _embedding_model
+    if _embedding_model is None:
+        try:
+            # Set cache directory to a writable location
+            cache_dir = os.path.join(os.getcwd(), "data", "model_cache")
+            os.makedirs(cache_dir, exist_ok=True)
+            
+            # Set environment variables for Hugging Face cache
+            os.environ['HF_HOME'] = cache_dir
+            os.environ['TRANSFORMERS_CACHE'] = cache_dir
+            
+            _embedding_model = SentenceTransformer(MODEL_PATH, cache_folder=cache_dir)
+            print(f"SUCCESS: Loaded embedding model from {MODEL_PATH}")
+        except Exception as e:
+            print(f"ERROR: Failed to load embedding model: {e}")
+            # Fallback to default model if local model fails
+            try:
+                print("Attempting to load default sentence-transformers model...")
+                _embedding_model = SentenceTransformer('all-MiniLM-L6-v2', cache_folder=cache_dir)
+                print("SUCCESS: Loaded default embedding model")
+            except Exception as fallback_error:
+                print(f"ERROR: Failed to load default model: {fallback_error}")
+                raise
+    return _embedding_model
+
+def get_embedding_function():
+    """Lazy load the embedding function"""
+    global _embedding_function
+    if _embedding_function is None:
+        try:
+            model = get_embedding_model()
+            _embedding_function = SentenceTransformerEmbeddingFunction(model_name=MODEL_PATH)
+        except Exception as e:
+            print(f"ERROR: Failed to create embedding function: {e}")
+            # Fallback to default model
+            try:
+                _embedding_function = SentenceTransformerEmbeddingFunction(model_name='all-MiniLM-L6-v2')
+                print("SUCCESS: Created embedding function with default model")
+            except Exception as fallback_error:
+                print(f"ERROR: Failed to create default embedding function: {fallback_error}")
+                raise
+    return _embedding_function
 
 def init_chroma():
     """Initialize ChromaDB client and collection"""
     try:
         # Use PersistentClient for local storage
         client = chromadb.PersistentClient(path="data/chroma_db")
+        
+        # Get embedding function with lazy loading
+        embedding_function = get_embedding_function()
+        
         collection = client.get_or_create_collection(
             name="resume_collection",
             embedding_function=embedding_function

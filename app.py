@@ -57,8 +57,9 @@ async def startup_event():
     global client, collection, embedding_model
     try:
         client, collection = init_chroma()
-        from sentence_transformers import SentenceTransformer
-        embedding_model = SentenceTransformer("models/sentence-transformers/all-MiniLM-L6-v2")
+        # Use lazy loading from vector_store instead of loading here
+        from Scripts.vector_store import get_embedding_model
+        embedding_model = get_embedding_model()
         print("✅ Application initialized successfully")
     except Exception as e:
         print(f"❌ Failed to initialize application: {e}")

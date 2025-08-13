@@ -34,10 +34,13 @@ COPY . .
 RUN mkdir -p static
 
 # Create data directories
-RUN mkdir -p data/resumes data/parsed data/chroma_db data/translated data/match_results data/interview_questions
+RUN mkdir -p data/resumes data/parsed data/chroma_db data/translated data/match_results data/interview_questions data/model_cache
 
 # Download spaCy model
 RUN python -m spacy download en_core_web_sm
+
+# Preload sentence transformer models to avoid runtime downloads
+RUN python Scripts/preload_models.py
 
 # Expose port
 EXPOSE 8000
